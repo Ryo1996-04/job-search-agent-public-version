@@ -4,7 +4,7 @@ A one-page cap alone let a resume shrink to ~0.75 of a page unnoticed.
 This measures how far down the last page the text reaches and warns when the page is
 under-filled.
 
-    python -m resume_gate.pdf_fill <resume.pdf> [--max-pages 1] [--min-fill 0.9] [--margin-in 0.5]
+    python -m job_agent.pdf_fill <resume.pdf> [--max-pages 1] [--min-fill 0.9] [--margin-in 0.5]
 
 Exit 1 on too many pages or an unreadable PDF; an under-filled page is a warning (exit 0).
 """
@@ -75,7 +75,7 @@ def check(report: FillReport, max_pages: int = 1, min_fill: float = 0.9) -> tupl
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(prog="resume_gate.pdf_fill", description=__doc__.splitlines()[0])
+    ap = argparse.ArgumentParser(prog="job_agent.pdf_fill", description=__doc__.splitlines()[0])
     ap.add_argument("pdf", type=Path)
     ap.add_argument("--max-pages", type=int, default=1)
     ap.add_argument("--min-fill", type=float, default=0.9)

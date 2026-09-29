@@ -12,7 +12,7 @@ import pytest
 
 import privacy_scan as ps
 from conftest import EDGE_BANK, EXAMPLE_BANK, FIXTURES, ROOT, load
-from resume_gate.validator import ORG_SHAPE
+from job_agent.validator import ORG_SHAPE
 
 AT, DOT = "@", "."
 
@@ -121,9 +121,9 @@ def test_plaintext_term_list_may_not_live_in_the_repo(tmp_path):
     ("docs/resume.pdf", True),
     ("letter.docx", True),
     ("HANDOFF-2026-01-01.md", True),
-    ("src/resume_gate/validator.py.bak-20260101", True),
+    ("src/job_agent/validator.py.bak-20260101", True),
     ("examples/experience_bank.example.yaml", False),
-    ("src/resume_gate/validator.py", False),
+    ("src/job_agent/validator.py", False),
 ])
 def test_private_paths(rel, private):
     assert (ps.private_path(rel) is not None) is private
@@ -145,7 +145,7 @@ def test_repository_contains_no_personal_data():
 
 def test_scan_covers_the_whole_repository():
     files = ps.repo_files()
-    for expected in ("README.md", "src/resume_gate/validator.py",
+    for expected in ("README.md", "src/job_agent/validator.py",
                      "examples/experience_bank.example.yaml", "tests/test_privacy.py"):
         assert expected in files
 

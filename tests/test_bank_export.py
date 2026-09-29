@@ -6,11 +6,11 @@ import json
 import pytest
 
 from conftest import EXAMPLE_BANK
-from resume_gate import bank_export
-from resume_gate.bank_export import (
+from job_agent import bank_export
+from job_agent.bank_export import (
     apply_budget, assess, build_facts, export, self_check, variants,
 )
-from resume_gate.validator import validate_output
+from job_agent.validator import validate_output
 
 
 def by_id(items):

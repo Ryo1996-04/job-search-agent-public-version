@@ -1,19 +1,24 @@
-# resume-fact-gate
+# job-search-agent (public version)
 
-[![tests](https://github.com/Ryo1996-04/resume-fact-gate/actions/workflows/tests.yml/badge.svg)](https://github.com/Ryo1996-04/resume-fact-gate/actions/workflows/tests.yml)
+[![tests](https://github.com/Ryo1996-04/job-search-agent-public-version/actions/workflows/tests.yml/badge.svg)](https://github.com/Ryo1996-04/job-search-agent-public-version/actions/workflows/tests.yml)
 
-**A validator that blocks resume claims your own evidence can't back up.**
+**A job-search agent that is not allowed to lie on your resume.**
+
+The full agent finds jobs, scores them against your real experience, tailors a resume
+for each one and prepares the application. It never submits anything a human has not
+approved, one application at a time. This repository is the public version of its core:
+the **provenance layer** that every resume must pass through. All data here is fictional.
 
 Tailoring a resume for every application, by hand or with an LLM, drifts. A number
 gets rounded up, an unfinished project becomes "shipped", an award slides under the
 wrong job. Each edit looks harmless and nobody re-checks the whole page.
 
-`resume-fact-gate` treats your experience as data. Every claim lives once, in a YAML
+So the agent treats your experience as data. Every claim lives once, in a YAML
 **evidence bank** you maintain. Every resume is checked against the bank before
 anyone reads it, and a claim the bank can't support is blocked, not just flagged.
 
 ```text
-$ python -m resume_gate.validator tests/fixtures/03-invented-metric.md
+$ python -m job_agent.validator tests/fixtures/03-invented-metric.md
 
   ERROR METRIC      '35%' is not a metric any sourced record supports
               -> Add it to a record's `metric` with a real `metric_source`, or remove it. No source, no number.
@@ -26,7 +31,34 @@ $ python -m resume_gate.validator tests/fixtures/03-invented-metric.md
 The 35% was never in the bank. Nobody had to think to blocklist it: a number with no
 sourced record behind it fails on its own.
 
-## How it works
+## The agent around it
+
+```text
+discover jobs → dedupe → filter → score → tailor → VALIDATE → prepare package → HUMAN APPROVES → submit
+ (public ATS     (evidence-backed      (rephrase    (this repo)                  (one job,
+  endpoints)      must-haves only)      only)                                    one approval)
+```
+
+The design is in [`docs/DESIGN.md`](docs/DESIGN.md). Its guardrails are enforced in code,
+not left to prompting:
+
+- **Provenance:** every bullet cites evidence, fits its role's dates, and uses a number only
+  if the number has a source.
+- **Sensitive fields:** visa, sponsorship, EEO, salary and similar questions are never
+  auto-answered. They go to a review queue.
+- **No bypass:** CAPTCHA, MFA or bot detection stops the run and asks a human.
+- **Approval gate:** no application is submitted without a recorded approval for that exact
+  job. There is no "approve all".
+
+[`CLAUDE.md`](CLAUDE.md) holds the same rules for coding agents working on the repo.
+[`docs/REPO_REVIEW.md`](docs/REPO_REVIEW.md) is the security review of seven open-source
+job-search tools that came before the build. None of them enforced provenance.
+
+| In this repository | Elsewhere |
+|---|---|
+| Evidence-bank format, validator (11 rules), resume exporter with bullet budgets and cut reasons, PDF page check, SQLite schema, privacy scan | Discovery and tracking: [career-ops](https://github.com/career-ops-hq/career-ops). Scoring, LLM tailoring, interview prep, approval gate: designed in DESIGN.md, not in this repo |
+
+## How the provenance layer works
 
 ```text
                    examples/experience_bank.example.yaml   (or your own, gitignored)
@@ -34,7 +66,7 @@ sourced record behind it fails on its own.
                                         │
               ┌─────────────────────────┴─────────────────────────┐
               ▼                                                   ▼
-   resume_gate.bank_export                              resume_gate.validator
+   job_agent.bank_export                              job_agent.validator
    bank → cv.md + cv-facts.json + report                any resume.md → OK / BLOCKED
    (per-variant bullet budgets, every cut explained)    (the rules below)
               │                                                   ▲
@@ -79,8 +111,8 @@ breaking one rule, plus clean controls that must pass.
 ## Quick start
 
 ```bash
-git clone https://github.com/Ryo1996-04/resume-fact-gate.git
-cd resume-fact-gate
+git clone https://github.com/Ryo1996-04/job-search-agent-public-version.git
+cd job-search-agent-public-version
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 pytest -q
@@ -89,8 +121,8 @@ pytest -q
 Check a resume, then export a tailored CV for one job family:
 
 ```bash
-python -m resume_gate.validator tests/fixtures/17-valid-multi-id.md --expect-provenance
-python -m resume_gate.bank_export --variant fde --out build/
+python -m job_agent.validator tests/fixtures/17-valid-multi-id.md --expect-provenance
+python -m job_agent.bank_export --variant fde --out build/
 ```
 
 `bank_export` writes `build/cv.md`, a `cv-facts.json` of allowed metrics and
@@ -102,7 +134,7 @@ write a CV that would fail its own fact check.
 is under-filled.
 
 ```bash
-python -m resume_gate.pdf_fill resume.pdf
+python -m job_agent.pdf_fill resume.pdf
 ```
 
 ## Using your own bank

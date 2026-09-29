@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "resume-fact-gate"
+name = "job-agent"
 version = "0.3.0"
-description = "Blocks resume claims that your evidence bank cannot back up."
+description = "Public version of a job-search agent: evidence bank, provenance validator and resume export. Never submits."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"

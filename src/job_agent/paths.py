@@ -6,11 +6,11 @@ from pathlib import Path
 
 
 def project_root() -> Path:
-    """Repo root. Override with RESUME_GATE_ROOT (tests use it to work in a tmpdir)."""
-    env = os.environ.get("RESUME_GATE_ROOT")
+    """Repo root. Override with JOB_AGENT_ROOT (tests use it to work in a tmpdir)."""
+    env = os.environ.get("JOB_AGENT_ROOT")
     if env:
         return Path(env).resolve()
-    # src/resume_gate/paths.py -> src/resume_gate -> src -> root
+    # src/job_agent/paths.py -> src/job_agent -> src -> root
     return Path(__file__).resolve().parents[2]
 
 
@@ -25,3 +25,6 @@ EXAMPLE_BANK = ROOT / "examples" / "experience_bank.example.yaml"
 def default_bank() -> Path:
     """The real bank if you have one, otherwise the fictional example."""
     return EXPERIENCE_BANK if EXPERIENCE_BANK.exists() else EXAMPLE_BANK
+
+# The pipeline's SQLite database. Under data/, so it is never committed.
+DB_PATH = ROOT / "data" / "agent.db"

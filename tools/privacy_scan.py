@@ -35,7 +35,7 @@ from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
 DENYLIST = ROOT / "tools" / "denylist.sha256"
-SALT = "resume-fact-gate/privacy/v1:"
+SALT = "job-search-agent-public-version/privacy/v1:"
 MAX_WORDS = 4
 CJK_MIN, CJK_MAX = 2, 16
 

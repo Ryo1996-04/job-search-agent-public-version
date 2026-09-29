@@ -17,7 +17,7 @@ short code so a failure points at the rule it broke:
               of the role it sits under, whose dates fit inside that role
 
 Run:
-    python -m resume_gate.validator <document.md> [--bank path] [--expect-provenance] [--json]
+    python -m job_agent.validator <document.md> [--bank path] [--expect-provenance] [--json]
 """
 from __future__ import annotations
 
@@ -663,7 +663,7 @@ def _check_provenance(doc: str, bank: dict[str, Any]) -> list[Finding]:
 
 
 def render(report: Report, target: Path) -> str:
-    out = [f"resume-gate validate - {target.name}", ""]
+    out = [f"job-agent validate - {target.name}", ""]
     if not report.findings:
         out.append("  no findings.")
     for f in report.findings:

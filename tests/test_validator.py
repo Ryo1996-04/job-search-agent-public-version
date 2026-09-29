@@ -12,8 +12,8 @@ from dataclasses import dataclass
 import pytest
 
 from conftest import EDGE_BANK, EXAMPLE_BANK, FIXTURES, load
-from resume_gate import validator
-from resume_gate.validator import (
+from job_agent import validator
+from job_agent.validator import (
     DOC_METRIC, _claim_window, _number_pattern, _parse_period, claim_text,
     validate_output,
 )

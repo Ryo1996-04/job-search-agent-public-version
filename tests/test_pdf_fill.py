@@ -1,10 +1,10 @@
-"""Tests for resume_gate.pdf_fill, on PDFs built here with text at known heights."""
+"""Tests for job_agent.pdf_fill, on PDFs built here with text at known heights."""
 from pathlib import Path
 
 from pypdf import PdfWriter
 from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
 
-from resume_gate.pdf_fill import check, main, measure
+from job_agent.pdf_fill import check, main, measure
 
 
 def make_pdf(path: Path, pages: list[list[float]]) -> Path:
