@@ -1,0 +1,60 @@
+# A synthetic bank of deliberately awkward records, for date and number edge cases.
+# Kept apart from the example bank so that tidying an example record can never
+# silently change what these cases prove. Everything here is fictional.
+owner: Test Owner
+forbidden_claims: []
+roles:
+  - role_id: R-LEAD
+    employer: Northwind Traders Co., Ltd.
+    title: Head of Engineering
+    start: 2020-06
+    end: 2025-06
+  - role_id: R-ENG
+    employer: Northwind Traders Co., Ltd.
+    title: Software Engineer
+    start: 2017-10
+    end: 2020-05
+evidence:
+  # The founding error of this project, rebuilt on purpose: a 2021 award filed
+  # under a role that ended in May 2020.
+  - evidence_id: EV-90
+    role_id: R-ENG
+    project: Synthetic award placed under the wrong role
+    period: 2021-03 to 2021-06
+    action: Received an industry award for the returns service.
+    status: shipped
+  - evidence_id: EV-91
+    role_id: R-LEAD
+    project: Synthetic record with no period
+    action: Coordinated delivery across the product team.
+    status: shipped
+  # Year precision must be compared as a year: "2021 to 2025" is inside a role that
+  # ends 2025-06, and padding 2025 to 2025-12 would call a true record false.
+  - evidence_id: EV-92
+    role_id: R-LEAD
+    project: Synthetic multi-year record
+    period: 2021 to 2025
+    action: Maintained the billing service.
+    status: shipped
+  # "EV-20" in a document is an identifier, not the figure 20.
+  - evidence_id: EV-93
+    role_id: R-LEAD
+    project: Synthetic hiring events
+    period: 2022-01 to 2022-12
+    action: Ran regional hiring events.
+    metric: "about 20 events a year"
+    metric_requires_qualifier: [year]
+    metric_source: Synthetic test value.
+    status: shipped
+  # Years listed as qualifiers are not figures, but the figure still needs them.
+  - evidence_id: EV-94
+    role_id: R-LEAD
+    project: Synthetic cumulative sign-up figure
+    period: 2020-06 to 2021-12
+    action: Grew merchant sign-ups.
+    metric: "about 5,000 sign-ups since 2019 (2021)"
+    metric_requires_qualifier: ["2021", "2019"]
+    metric_source: Synthetic test value.
+    status: shipped
+education: []
+skills: {}

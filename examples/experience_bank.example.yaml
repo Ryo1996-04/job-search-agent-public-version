@@ -1,0 +1,212 @@
+# A FICTIONAL evidence bank. Every person, company, school and number in this file
+# is invented. It exists so the tools and tests run out of the box.
+#
+# Your real bank goes in profiles/experience_bank.yaml, which is gitignored.
+# Copy this file there and replace the contents with your own records.
+
+owner: Jordan Sample
+rule: >
+  Every resume bullet must cite at least one evidence_id below.
+  Nothing may be written that is not traceable to a record here.
+  Records with status other than "shipped" must not use completed-tense claims.
+
+# Phrases that must never appear in any generated document, whichever record is
+# being written about. Usually a claim that was once written and then withdrawn.
+forbidden_claims:
+  - independently verified
+  - wrote the backend          # the platform team wrote it; Jordan migrated it
+  - Kubernetes operator        # evaluated, never built
+  - 50% faster                 # the speed-up was real; the number was never measured
+
+# ---------------------------------------------------------------------------
+# ROLES - the containers. Dates here constrain everything nested under them.
+# ---------------------------------------------------------------------------
+roles:
+  - role_id: R-LEAD
+    employer: Northwind Traders Co., Ltd.
+    title: Head of Engineering
+    aliases: [Engineering Lead]
+    location: Remote
+    start: 2020-06
+    end: 2025-06
+    industry: Logistics
+
+  - role_id: R-ENG
+    employer: Northwind Traders Co., Ltd.
+    title: Software Engineer
+    location: Remote
+    start: 2017-10
+    end: 2020-05
+    industry: Logistics
+
+  - role_id: R-INDIE
+    employer: Independent (self-directed)
+    title: Independent technical work
+    aliases: [Independent Technical Work]
+    location: Remote
+    start: 2025-09
+    end: present
+
+# ---------------------------------------------------------------------------
+# VARIANTS - one per job family. How many bullets each role may carry, and which
+# records lead. Decisions about a person's resume, so they live here, not in code.
+# ---------------------------------------------------------------------------
+variants:
+  swe:
+    label: SWE
+    budget: {R-LEAD: 3, R-ENG: 2, R-INDIE: 1}
+    lead_order: [EV-21, EV-02, EV-09]
+  fde:
+    label: FDE
+    budget: {R-LEAD: 4, R-ENG: 1, R-INDIE: 1}
+    lead_order: [EV-02, EV-04, EV-01, EV-21]
+
+# ---------------------------------------------------------------------------
+# EVIDENCE - one record per claim.
+# ---------------------------------------------------------------------------
+evidence:
+  - evidence_id: EV-01
+    role_id: R-LEAD
+    project: Warehouse scanner dashboard
+    period: 2023-02 to 2024-01
+    action: >
+      Designed a browser dashboard that streams barcode-scanner events from
+      warehouse handhelds.
+    status: pre-release          # never reached the warehouse floor: no "built" or "launched"
+    confidence: high
+    technologies: [JavaScript, WebSockets]
+    job_families: [SWE, FDE]
+
+  - evidence_id: EV-02
+    role_id: R-LEAD
+    project: Order API migration
+    period: 2022-03 to 2022-09
+    action: >
+      Migrated the order API from a single virtual machine to a managed container
+      service, with a staged cut-over and rollback plan.
+    metric: ">500 orders per minute"
+    metric_source: Load-test report, 2022-09
+    metric_withheld:
+      - value: "~15% hosting cost reduction"
+        reason: Estimated from one month of invoices; not yet established.
+    status: shipped
+    confidence: high
+    technologies: [Python, Docker, PostgreSQL]
+    job_families: [SWE, FDE]
+
+  - evidence_id: EV-03
+    role_id: R-LEAD
+    project: City open-data challenge entry
+    period: 2021-10 to 2021-11
+    action: >
+      Designed and pitched a route-planning entry for a city open-data challenge.
+    outcome: Third place.
+    metric: "USD 1,000 prize"
+    metric_source: Organiser results page
+    status: shipped
+    confidence: high
+    job_families: [FDE]
+
+  - evidence_id: EV-04
+    role_id: R-LEAD
+    project: Driver onboarding sessions
+    period: 2021 to 2025
+    action: >
+      Ran onboarding sessions that trained delivery drivers on the handheld app.
+    metric: "about 40 sessions a year"
+    metric_requires_qualifier: [year]      # bare, "40 sessions" reads as a total
+    metric_source: Training calendar export
+    status: shipped
+    confidence: medium
+    job_families: [FDE]
+
+  - evidence_id: EV-05
+    role_id: R-LEAD
+    project: Merchant network growth
+    period: 2020-06 to 2024-12
+    action: Grew the merchant network through regional partnerships.
+    metric: "12,000 merchant sign-ups since 2018 (2024)"
+    # Cumulative sign-ups, not active merchants. All three must travel with the
+    # number.
+    metric_requires_qualifier: [sign-ups, "2018", "2024"]
+    metric_source: Company annual report, 2024
+    status: shipped
+    confidence: medium
+    job_families: [FDE]
+
+  - evidence_id: EV-09
+    role_id: R-ENG
+    project: Returns-processing service
+    period: 2018-01 to 2020-03
+    action: >
+      Built a returns-processing service that replaced a manual spreadsheet
+      workflow.
+    status: shipped
+    confidence: high
+    technologies: [TypeScript, PostgreSQL]
+    job_families: [SWE]
+
+  - evidence_id: EV-10
+    role_id: R-ENG
+    project: Checkout page optimisation
+    period: 2019-04 to 2019-08
+    action: Profiled and reduced the checkout page's load time.
+    metric: "~30% faster page loads"
+    metric_source: UNKNOWN - never measured before and after
+    status: shipped
+    confidence: low
+    job_families: [SWE]
+
+  - evidence_id: EV-14
+    role_id: R-LEAD
+    project: Delivery-time prediction concept
+    period: 2024-03 to 2024-05
+    action: >
+      Architected a concept demo of a delivery-time prediction model for a
+      partner showcase.
+    status: prototype
+    confidence: high
+    job_families: [FDE]
+
+  - evidence_id: EV-21
+    role_id: R-INDIE
+    project: JSON parsing benchmark
+    period: 2026-09
+    action: >
+      Benchmarked orjson vs. the standard-library json module on large order
+      exports.
+    metric: "3.1x faster parsing; 2.2x end-to-end (median of 50 runs, 2026)"
+    # True only as measured. Bare, it reads as a result on any input, any year.
+    metric_requires_qualifier: ["2026", "50", median]
+    metric_source: Benchmark script output, committed with the script
+    status: shipped
+    confidence: high
+    technologies: [Python]
+    job_families: [SWE, FDE]
+
+  - evidence_id: EV-30
+    role_id: R-LEAD
+    project: Freight carrier agreement
+    period: 2023-06 to 2023-09
+    action: Negotiated a confidential rate agreement with a regional freight carrier.
+    disclosure: private
+    disclosure_note: Under NDA. Interview preparation only; never name the carrier.
+    status: shipped
+    confidence: high
+    job_families: [FDE]
+
+education:
+  - institution: Example State University
+    credential: M.S. in Software Engineering
+    start: 2025-09
+    status: in-progress
+
+skills:
+  languages: [Python, TypeScript, SQL]
+  tools: [Docker, PostgreSQL, Git]
+
+open_questions:
+  - id: Q1
+    severity: MEDIUM
+    issue: Was the hosting cost reduction in EV-02 sustained beyond one month?
+    status: open
